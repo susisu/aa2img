@@ -12,18 +12,18 @@ function trim(text) {
 function render(text, style, options) {
     const trimmed = trim(text);
 
-    style        = style || {};
-    style.margin = style.margin || {};
-    const font            = style.font || "_serif";
-    const color           = style.color || "#000000";
-    const backgroundColor = style.backgroundColor || "#FFFFFF";
-    const marginTop       = style.margin.top    || 0;
-    const marginBottom    = style.margin.bottom || 0;
-    const marginLeft      = style.margin.left   || 0;
-    const marginRight     = style.margin.right  || 0;
+    const st     = style || {};
+    const margin = st.margin || 0;
+    const font            = st.font || "_serif";
+    const color           = st.color || "#000000";
+    const backgroundColor = st.backgroundColor || "#FFFFFF";
+    const marginTop       = typeof margin === "object" ? margin.top    || 0 : margin;
+    const marginBottom    = typeof margin === "object" ? margin.bottom || 0 : margin;
+    const marginLeft      = typeof margin === "object" ? margin.left   || 0 : margin;
+    const marginRight     = typeof margin === "object" ? margin.right  || 0 : margin;
 
-    options = options || {};
-    const compressionLevel = options.compressionLevel || 0;
+    const op = options || {};
+    const compressionLevel = op.compressionLevel || 0;
 
     const canvas = new Canvas(0, 0);
     const ctx    = canvas.getContext("2d");
