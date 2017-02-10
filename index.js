@@ -5,8 +5,8 @@ const fs = require("fs");
 const Canvas = require("canvas");
 
 function trim(text) {
-    return text.replace(/^[\s\u3000]+/, "")
-        .replace(/[\s\u3000]+$/, "");
+    return text.replace(/^([ \u3000]*\n)+/, "")
+        .replace(/([ \u3000]*\n)+$/, "");
 }
 
 function render(text, style, options) {
