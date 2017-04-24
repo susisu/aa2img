@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const fs = require("fs");
+const co = require("co");
+
+const program     = require("commander");
+const packageInfo = require("../package.json");
+
+const aa2img = require("..");
+
+function readFile(filepath, options) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filepath, options, (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(data);
+    });
+  });
+}
+
+process.title = "aa2img";
+
+program.version(packageInfo.version, "-v, --version");
+
+program.option("-f, --font <font>", "set font");
+program.option("-c, --color <color>", "set text color");
+program.option("-b, --bgcolor <color>", "set background color");
+program.option("-m, --margin <px>", "set margin", parseInt);
+program.option("-C, --compress <level>", "set compression level");
+
+program.arguments("<infile> <outfile>");
+
+program.action((infile, outfile) =>
+  co(function* () {
+    // read source
+    const src = yield readFile(infile, { encoding: "utf-8" });
+    // set styles
+    const style = {};
+    if (program["font"]) {
+      style.font = program["font"];
+    }
+    if (program["color"]) {
+      style.color = program["color"];
+    }
+    if (program["bgcolor"]) {
+      style.backgroundColor = program["bgcolor"];
+    }
+    if (program["margin"]) {
+      style.margin = program["margin"];
+    }
+    // set options
+    const options = {};
+    if (program["compress"]) {
+      options.compressionLevel = program["compress"];
+    }
+    // render
+    yield aa2img.renderToFile(outfile, src, style, options);
+  }).catch(err => {
+    process.stderr.write(String(err) + "\n");
+  })
+);
+
+program.parse(process.argv);
+
+if (program.args.length === 0) {
+  program.help();
+}
