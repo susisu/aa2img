@@ -30,6 +30,10 @@ program.option("-f, --font <font>", "set font");
 program.option("-c, --color <color>", "set text color");
 program.option("-b, --bgcolor <color>", "set background color");
 program.option("-m, --margin <px>", "set margin", parseInt);
+program.option("--margin-top <px>", "set top margin", parseInt);
+program.option("--margin-bottom <px>", "set bottom margin", parseInt);
+program.option("--margin-left <px>", "set left margin", parseInt);
+program.option("--margin-right <px>", "set right margin", parseInt);
 program.option("-C, --compress <level>", "set compression level");
 
 program.arguments("<infile> <outfile>");
@@ -40,22 +44,26 @@ program.action((infile, outfile) =>
     const src = yield readFile(infile, { encoding: "utf-8" });
     // set styles
     const style = {};
-    if (program["font"]) {
-      style.font = program["font"];
+    if (program.font) {
+      style.font = program.font;
     }
-    if (program["color"]) {
-      style.color = program["color"];
+    if (program.color) {
+      style.color = program.color;
     }
-    if (program["bgcolor"]) {
-      style.backgroundColor = program["bgcolor"];
+    if (program.bgcolor) {
+      style.backgroundColor = program.bgcolor;
     }
-    if (program["margin"]) {
-      style.margin = program["margin"];
-    }
+    style.margin = {
+      top   : program.marginTop    || program.margin,
+      bottom: program.marginBottom || program.margin,
+      left  : program.marginLeft   || program.margin,
+      right : program.marginRight  || program.margin
+    };
+
     // set options
     const options = {};
-    if (program["compress"]) {
-      options.compressionLevel = program["compress"];
+    if (program.compress) {
+      options.compressionLevel = program.compress;
     }
     // render
     yield aa2img.renderToFile(outfile, src, style, options);
