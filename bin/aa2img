@@ -43,28 +43,21 @@ program.action((infile, outfile) =>
     // read source
     const src = yield readFile(infile, { encoding: "utf-8" });
     // set styles
-    const style = {};
-    if (program.font) {
-      style.font = program.font;
-    }
-    if (program.color) {
-      style.color = program.color;
-    }
-    if (program.bgcolor) {
-      style.backgroundColor = program.bgcolor;
-    }
-    style.margin = {
-      top   : program.marginTop    || program.margin,
-      bottom: program.marginBottom || program.margin,
-      left  : program.marginLeft   || program.margin,
-      right : program.marginRight  || program.margin
+    const style = {
+      font           : program.font,
+      color          : program.color,
+      backgroundColor: program.bgcolor,
+      margin         : {
+        top   : program.marginTop    || program.margin,
+        bottom: program.marginBottom || program.margin,
+        left  : program.marginLeft   || program.margin,
+        right : program.marginRight  || program.margin
+      }
     };
-
     // set options
-    const options = {};
-    if (program.compress) {
-      options.compressionLevel = program.compress;
-    }
+    const options = {
+      compressionLevel: program.compress
+    };
     // render
     yield aa2img.renderToFile(outfile, src, style, options);
   }).catch(err => {
